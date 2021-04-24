@@ -1,6 +1,6 @@
 name: connectivity_wall
-description: A Connectivity wall monitor
-version: 0.0.1
+description: Connectivity wall redirect user to a widget when offline and another if online
+version: 0.0.2
 homepage: https://github.com/lauro-cesar
 
 environment:
@@ -11,6 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   connectivity: ^3.0.3
+  http:
 
 dev_dependencies:
   flutter_test:

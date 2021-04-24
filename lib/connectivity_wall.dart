@@ -1,7 +1,7 @@
 library connectivity_wall;
 
+import 'package:http/http.dart' as http;
 import 'dart:async';
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:connectivity/connectivity.dart';
@@ -47,7 +47,7 @@ class _ConnectivityWallState extends State<ConnectivityWall> {
   bool _isConnected = false;
   Map<bool, int> _index = {false: 0, true: 1};
 
-  final HttpClient clientHttp = HttpClient();
+  final httpClient = http.Client();
 
   StreamSubscription<ConnectivityResult>? subscription;
 
@@ -72,14 +72,15 @@ class _ConnectivityWallState extends State<ConnectivityWall> {
   }
 
   void ping() {
-    clientHttp.headUrl(widget.onPingUrl).then((HttpClientRequest request) {
-      return request.close();
-    }).then((HttpClientResponse response) {
-      /// set connected if the status code match responseCode
-      setState(() {
-        _isConnected = (response.statusCode == widget.responseCode);
-      });
-    }).catchError((e) {
+    httpClient
+        .head(widget.onPingUrl)
+        .timeout(Duration(seconds: 30))
+        .then((response) => {
+              setState(() {
+                _isConnected = (response.statusCode == widget.responseCode);
+              })
+            })
+        .catchError((error) {
       setState(() {
         _isConnected = false;
       });
