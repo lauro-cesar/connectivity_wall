@@ -4,7 +4,10 @@ A Connectivity wall monitor
 
 ## Getting Started
 
-Connectivity wall redirect user to a widget when offline and another if online
+Connectivity wall redirect user to a widget when offline and another if online.
+
+We keep the app state using a IndexedStack.
+
 
 
 ```
