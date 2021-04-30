@@ -11,3 +11,7 @@ Connectivity_wall helps to monitor the internet connectivity and notify users wi
 ## [1.0.1] - 04/29/21
 
 * First major release, after my first like.
+
+## [1.0.2] - 04/30/21
+
+* Added repo to pubspec
