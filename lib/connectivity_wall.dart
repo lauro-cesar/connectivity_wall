@@ -1,10 +1,10 @@
 library connectivity_wall;
 
-import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:connectivity/connectivity.dart';
+import 'package:http/http.dart' as http;
 
 class ConnectivityWall extends StatefulWidget {
   /// We make a HEAD request to url every pingInterval
@@ -14,7 +14,7 @@ class ConnectivityWall extends StatefulWidget {
   final int pingInterval;
 
   /// Expect this response code from pingUrl
-  final int responseCode;
+  final List<int> responseCode;
 
   /// build this when disconnected
   final Widget onDisconnectedWall;
@@ -24,6 +24,7 @@ class ConnectivityWall extends StatefulWidget {
 
   /// Called on request Timeout
   final Function() onDisconnected;
+  Function(int statusCode)? onPingResponse;
 
   /// Called when user change networks (Wifi,mobile,etc)
   final Function(ConnectivityResult result) onConnectivityChanged;
@@ -36,7 +37,8 @@ class ConnectivityWall extends StatefulWidget {
       required this.onConnectedWall,
       required this.onDisconnected,
       required this.onConnectivityChanged,
-      required this.pingInterval});
+      required this.pingInterval,
+      this.onPingResponse});
 
   @override
   _ConnectivityWallState createState() => _ConnectivityWallState();
@@ -76,11 +78,13 @@ class _ConnectivityWallState extends State<ConnectivityWall> {
         .head(widget.onPingUrl)
         .timeout(Duration(seconds: 30))
         .then((response) => {
+              widget.onPingResponse!(response.statusCode),
               setState(() {
-                _isConnected = (response.statusCode == widget.responseCode);
+                _isConnected = (widget.responseCode.contains(response.statusCode));
               })
             })
         .catchError((error) {
+      widget.onDisconnected();
       setState(() {
         _isConnected = false;
       });
@@ -97,8 +101,7 @@ class _ConnectivityWallState extends State<ConnectivityWall> {
               onChanged(result),
 
               /// Subscribe to listen changes
-              subscription =
-                  Connectivity().onConnectivityChanged.listen(onChanged),
+              subscription = Connectivity().onConnectivityChanged.listen(onChanged),
             })
         .then((_) => {
               /// Lets start pinging
