@@ -99,7 +99,6 @@ class _ConnectivityWallState extends State<ConnectivityWall> {
         .then((result) => {
               /// Call onConnectivityChanged
               onChanged(result),
-
               /// Subscribe to listen changes
               subscription = Connectivity().onConnectivityChanged.listen(onChanged),
             })
