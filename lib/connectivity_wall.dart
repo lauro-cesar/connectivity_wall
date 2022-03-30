@@ -1,9 +1,9 @@
 library connectivity_wall;
 
 import 'dart:async';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-import 'package:connectivity/connectivity.dart';
 import 'package:http/http.dart' as http;
 
 class ConnectivityWall extends StatefulWidget {
