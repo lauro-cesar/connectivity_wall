@@ -46,7 +46,7 @@ class ConnectivityWall extends StatefulWidget {
 
 class _ConnectivityWallState extends State<ConnectivityWall> {
   /// Rebuild based
-  bool _isConnected = false;
+  bool _isConnected = true;
   Map<bool, int> _index = {false: 0, true: 1};
 
   final httpClient = http.Client();
@@ -99,6 +99,7 @@ class _ConnectivityWallState extends State<ConnectivityWall> {
         .then((result) => {
               /// Call onConnectivityChanged
               onChanged(result),
+
               /// Subscribe to listen changes
               subscription = Connectivity().onConnectivityChanged.listen(onChanged),
             })
