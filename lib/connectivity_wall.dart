@@ -3,9 +3,9 @@ library connectivity_wall;
 import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
+/// ConnectivityWall widget
 class ConnectivityWall extends StatefulWidget {
   /// We make a HEAD request to url every pingInterval
   final Uri onPingUrl;
@@ -24,7 +24,9 @@ class ConnectivityWall extends StatefulWidget {
 
   /// Called on request Timeout
   final Function() onDisconnected;
-  Function(int statusCode)? onPingResponse;
+
+  /// Return the ping response status code
+  final Function(int statusCode)? onPingResponse;
 
   /// Called when user change networks (Wifi,mobile,etc)
   final Function(ConnectivityResult result) onConnectivityChanged;
@@ -80,7 +82,8 @@ class _ConnectivityWallState extends State<ConnectivityWall> {
         .then((response) => {
               widget.onPingResponse!(response.statusCode),
               setState(() {
-                _isConnected = (widget.responseCode.contains(response.statusCode));
+                _isConnected =
+                    (widget.responseCode.contains(response.statusCode));
               })
             })
         .catchError((error) {
@@ -101,7 +104,8 @@ class _ConnectivityWallState extends State<ConnectivityWall> {
               onChanged(result),
 
               /// Subscribe to listen changes
-              subscription = Connectivity().onConnectivityChanged.listen(onChanged),
+              subscription =
+                  Connectivity().onConnectivityChanged.listen(onChanged),
             })
         .then((_) => {
               /// Lets start pinging
@@ -119,7 +123,6 @@ class _ConnectivityWallState extends State<ConnectivityWall> {
   @override
   Widget build(BuildContext context) {
     return IndexedStack(
-      key: Key("_${_isConnected.toString()}"),
       index: _index[_isConnected],
       children: [widget.onDisconnectedWall, widget.onConnectedWall],
     );

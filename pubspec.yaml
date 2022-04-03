@@ -1,6 +1,6 @@
 name: connectivity_wall
 description: Connectivity wall redirect user to a widget when offline and another if online
-version: 1.0.4
+version: 1.0.7
 homepage: https://github.com/lauro-cesar
 repository: https://github.com/lauro-cesar/connectivity_wall
 
