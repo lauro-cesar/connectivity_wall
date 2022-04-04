@@ -80,17 +80,22 @@ class _ConnectivityWallState extends State<ConnectivityWall> {
         .head(widget.onPingUrl)
         .timeout(Duration(seconds: 30))
         .then((response) => {
-              widget.onPingResponse!(response.statusCode),
-              setState(() {
-                _isConnected =
-                    (widget.responseCode.contains(response.statusCode));
-              })
+              if (mounted)
+                {
+                  widget.onPingResponse!(response.statusCode),
+                  setState(() {
+                    _isConnected =
+                        (widget.responseCode.contains(response.statusCode));
+                  })
+                }
             })
         .catchError((error) {
-      widget.onDisconnected();
-      setState(() {
-        _isConnected = false;
-      });
+      if (mounted) {
+        widget.onDisconnected();
+        setState(() {
+          _isConnected = false;
+        });
+      }
     });
   }
 

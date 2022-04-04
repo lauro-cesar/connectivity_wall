@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
         ),
         home: ConnectivityWall(
           pingInterval: 120,
-          responseCode: 200,
+          responseCode: [200,302,301],
           onPingUrl: Uri.parse("https://pub.dev/"),
 
           /// Connectedwall

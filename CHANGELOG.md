@@ -28,3 +28,7 @@ Connectivity_wall helps to monitor the internet connectivity and notify users wi
 ## [1.0.7] - 04/02/22
 
 * Fix static analysis issues
+
+## [1.0.8] - 04/04/22
+
+* Fix lifecycle state: defunct, not mounted
