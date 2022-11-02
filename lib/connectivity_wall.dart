@@ -1,7 +1,9 @@
 library connectivity_wall;
 
 import 'dart:async';
+import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -51,9 +53,37 @@ class _ConnectivityWallState extends State<ConnectivityWall> {
   bool _isConnected = true;
   Map<bool, int> _index = {false: 0, true: 1};
 
-  final httpClient = http.Client();
-
   StreamSubscription<ConnectivityResult>? subscription;
+
+  Future<http.Response> requestHead(
+      Uri url, Map<String, String> requestHeaders) async {
+    if (!kReleaseMode) {
+      print(url);
+    }
+    try {
+      final resposta = await http.Client()
+          .head(url, headers: requestHeaders)
+          .timeout(const Duration(seconds: 30));
+      if (!kReleaseMode) {}
+      return resposta;
+    } on TimeoutException catch (e) {
+      if (!kReleaseMode) {
+        print(e);
+      }
+      return http.Response("", 408);
+      ;
+    } on SocketException catch (e) {
+      if (!kReleaseMode) {
+        print(e);
+      }
+      return http.Response("", 500);
+    } on Exception catch (e) {
+      if (!kReleaseMode) {
+        print(e);
+      }
+      return http.Response("", 500);
+    }
+  }
 
   /// Call widget onConnectivityChanged
   void onChanged(ConnectivityResult result) {
@@ -75,28 +105,20 @@ class _ConnectivityWallState extends State<ConnectivityWall> {
     }
   }
 
-  void ping() {
-    httpClient
-        .head(widget.onPingUrl)
-        .timeout(Duration(seconds: 30))
-        .then((response) => {
-              if (mounted)
-                {
-                  widget.onPingResponse!(response.statusCode),
-                  setState(() {
-                    _isConnected =
-                        (widget.responseCode.contains(response.statusCode));
-                  })
-                }
-            })
-        .catchError((error) {
-      if (mounted) {
+  Future<void> ping() async {
+
+    final resposta = await requestHead(widget.onPingUrl, {});
+    if (mounted) {
+      setState(() {
+        _isConnected = (widget.responseCode.contains(resposta.statusCode));
+      });
+      widget.onPingResponse!(resposta.statusCode);
+      if(!_isConnected) {
         widget.onDisconnected();
-        setState(() {
-          _isConnected = false;
-        });
       }
-    });
+
+
+    }
   }
 
   @override
