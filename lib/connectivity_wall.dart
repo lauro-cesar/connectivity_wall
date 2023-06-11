@@ -27,7 +27,7 @@ class ConnectivityWall extends StatefulWidget {
   final Function() onDisconnected;
 
   /// Return the ping response status code
-  final Function(int statusCode)? onPingResponse;
+  final Function(int statusCode) onPingResponse;
 
   /// Called when user change networks (Wifi,mobile,etc)
   final Function(ConnectivityResult result) onConnectivityChanged;
@@ -41,7 +41,7 @@ class ConnectivityWall extends StatefulWidget {
       required this.onDisconnected,
       required this.onConnectivityChanged,
       required this.pingInterval,
-      this.onPingResponse});
+      required this.onPingResponse});
 
   @override
   _ConnectivityWallState createState() => _ConnectivityWallState();
@@ -96,7 +96,7 @@ class _ConnectivityWallState extends State<ConnectivityWall> {
       setState(() {
         _isConnected = (widget.responseCode.contains(resposta.statusCode));
       });
-      widget.onPingResponse!(resposta.statusCode);
+      widget.onPingResponse(resposta.statusCode);
       if(!_isConnected) {
         widget.onDisconnected();
       }

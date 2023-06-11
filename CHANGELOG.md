@@ -33,12 +33,15 @@ Connectivity_wall helps to monitor the internet connectivity and notify users wi
 
 * Fix lifecycle state: defunct, not mounted
 
-
-## [1.0.10] - 11/06/2023
+## [1.0.11] - 11/06/2023
 
 * upgrade dependencies:
   * connectivity_plus
   * http
 * Upgrade environment:
   * sdk = '>=3.0.3 <4.0.0'
-  
+
+
+## [1.0.11] - 11/06/2023
+
+* fix Null check:

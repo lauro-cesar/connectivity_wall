@@ -24,6 +24,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
         ),
         home: ConnectivityWall(
+          onPingResponse: (response) {},
           pingInterval: 120,
           responseCode: [200],
           onPingUrl: Uri.parse("https://pub.dev/"),
