@@ -11,7 +11,6 @@ import 'package:http/http.dart' as http;
 class ConnectivityWall extends StatefulWidget {
   /// We make a HEAD request to url every pingInterval
   final Uri onPingUrl;
-
   ///Interval in secs to check the onPingUrl
   final int pingInterval;
 
@@ -57,38 +56,23 @@ class _ConnectivityWallState extends State<ConnectivityWall> {
 
   Future<http.Response> requestHead(
       Uri url, Map<String, String> requestHeaders) async {
-    if (!kReleaseMode) {
-      print(url);
-    }
     try {
-      final resposta = await http.Client()
+      final request = await http.Client()
           .head(url, headers: requestHeaders)
-          .timeout(const Duration(seconds: 30));
-      if (!kReleaseMode) {}
-      return resposta;
+          .timeout(const Duration(seconds: 60));
+      return request;
     } on TimeoutException catch (e) {
-      if (!kReleaseMode) {
-        print(e);
-      }
-      return http.Response("", 408);
-      ;
+      return http.Response(e.toString(), 408);
     } on SocketException catch (e) {
-      if (!kReleaseMode) {
-        print(e);
-      }
-      return http.Response("", 500);
+      return http.Response(e.toString(), 500);
     } on Exception catch (e) {
-      if (!kReleaseMode) {
-        print(e);
-      }
-      return http.Response("", 500);
+      return http.Response(e.toString(), 500);
     }
   }
 
   /// Call widget onConnectivityChanged
   void onChanged(ConnectivityResult result) {
     widget.onConnectivityChanged(result);
-
     /// Check connection
     ping();
   }
@@ -129,7 +113,6 @@ class _ConnectivityWallState extends State<ConnectivityWall> {
         .then((result) => {
               /// Call onConnectivityChanged
               onChanged(result),
-
               /// Subscribe to listen changes
               subscription =
                   Connectivity().onConnectivityChanged.listen(onChanged),
